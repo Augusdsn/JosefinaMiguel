@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Josefina y Miguel</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preload" href="textura-de-papel-blanco.jpg" as="image">
+</head>
+<body class="show-layout">
+
+  <div class="page show-layout">
+    <div class="page-scale">
+
+    <!-- Mute button -->
+    <button id="muteBtn" class="mute-btn" title="Silenciar música">🔊</button>
+
+    <!-- Hidden audio player for background music -->
+    <audio id="backgroundMusic" preload="auto" loop style="display: none;">
+      <source src="Shed A Light (Audio by Robin Schulz & David Guetta).mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- CONTENIDO PRINCIPAL, tipo “landing” (como el template Floral) -->
+    <main class="layout" id="layout">
+
+      <!-- BLOQUE HERO PRINCIPAL (pasaporte abierto + texto intro) -->
+      <section class="section hero-open">
+        <div class="card">
+          <img src="Logo-03.svg" class="logo-img" />
+
+          <p class="subtitle-open">¡Nos casamos!</p>
+
+          <div class="collage-wrapper">
+            <img src="pasaporte-abierto.png" alt="Pasaporte abierto" class="collage-img collage-open" />
+          </div>
+
+          <p class="intro">
+            Elegimos caminar juntos en esta vida, y nos encantaría que fueras parte de este viaje...
+          </p>
+        </div>
+      </section>
+
+      <section class="section date-section">
+    <div class="card">
+
+      <p class="esperamos">Te esperamos el</p>
+      <div class="date-pill">20/03/2026</div>
+      <div class="countdown-bar">
+<div class="countdown">
+
+  <div class="cd-block">
+    <label>MESES</label>
+    <div class="digits-container" id="months-container">
+      <div class="digit"><span>0</span></div>
+      <div class="digit"><span>0</span></div>
+    </div>
+  </div>
+
+  <div class="cd-block">
+    <label>DÍAS</label>
+    <div class="digits-container" id="days-container">
+      <div class="digit"><span>0</span></div>
+      <div class="digit"><span>0</span></div>
+    </div>
+  </div>
+
+  <div class="cd-block">
+    <label>HORAS</label>
+    <div class="digits-container" id="hours-container">
+      <div class="digit"><span>0</span></div>
+      <div class="digit"><span>0</span></div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+      <div class="polaroids-wrapper">
+        <img src="polaroids.png" alt="Polaroids" class="polaroids-img" />
+      </div>
+
+    </div>
+  </section>
+
+      <!-- BLOQUE ITINERARIO -->
+      <section class="section itinerary-section">
+        <div class="card">
+          <p class="recordatorio">Recuerda organizarte con tiempo para que no te pierdas ningún momento de esta ceremonia tan especial para nosotros.</p>
+
+          <h2 class="itinerary-title">Itinerario:</h2>
+
+          <div class="itinerary-wrapper">
+
+            <img src="recorrido-avion-largo.png" alt="Recorrido avión" class="itinerary-path" />
+
+            <div class="itinerary-top">
+              <div class="it-item ceremony-item">
+                <h3 class="it-title">Ceremonia</h3>
+                <div class="it-icon">
+                  <img src="iglesia.png" alt="Iglesia" />
+                </div>
+                <p class="it-address-name">Iglesia Colegio Verbo Divino</p>
+                <p class="it-address">Av. Chicureo 12.500, Colina</p>
+                <p class="it-time ceremony-time">17:30hrs</p>
+              </div>
+            </div>
+
+            <div class="itinerary-row">
+              <div class="it-item row-item">
+                <h3 class="it-title">Cóctel</h3>
+                <div class="it-icon">
+                  <img src="coctail.png" alt="Cóctel" />
+                </div>
+                <p class="it-time">19:30hrs</p>
+              </div>
+
+              <div class="it-item row-item">
+                <h3 class="it-title">Comida</h3>
+                <div class="it-icon">
+                  <img src="comida.png" alt="Comida" />
+                </div>
+                <p class="it-time">21:00hrs</p>
+              </div>
+
+              <div class="it-item row-item">
+                <h3 class="it-title">Fiesta</h3>
+                <div class="it-icon">
+                  <img src="fiesta.png" alt="Fiesta" />
+                </div>
+                <p class="it-time">23:00hrs</p>
+              </div>
+            </div>
+
+            <div class="itinerary-address">
+              <p class="it-address-name">Casona de la Laguna Sofía Jottar</p>
+              <p class="it-address">Av. Chicureo 13.000, Piedra Roja, Chicureo, Colina</p>
+            </div>
+          </div>
+
+        </div>
+
+<!-- texto solo adultos -->
+        <div class="hero-hint">
+          <p> Esta fecha está pensada solo para adultos, si tienes niños, ¡organizate con antelación!</p>
+        </div>
+
+        <!-- Botón a formulario -->
+
+        <div class="cta-section">
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSeKC48AyOc9PfJfd6u12sqwewjctts1avYB2R3qiYV3mIlqrA/viewform?usp=dialog" target="_blank" class="cta-button">Confirma tu asistencia</a>
+        </div>
+
+<div class="separador">
+  <rectangle width="100%"/>
+</div>
+
+        <div class="card-container">
+  <!-- Dress Code card -->
+  <div class="flip-card">
+    <div class="front">
+      <div class="icon">
+        <img src="dresscode.png" alt="Dresscode">
+      </div>
+      <div class="title-one">Dress Code</div>
+    </div>
+    <div class="back">
+      <div class="title">Dress Code</div>
+      <p class="description">El blanco es para la novia, usa tu mejor look formal ¡Atrévete con los colores!</p>
+    </div>
+  </div>
+
+    <!-- Regalos card -->
+  <div class="flip-card">
+    <div class="front">
+      <div class="icon-two">
+        <img src="regalo.png" alt="Regalos">
+      </div>
+      <div class="title">Regalos</div>
+    </div>
+    <div class="back">
+      <div class="title">¡Gracias!</div>
+      <p class="description">
+Lista de novios Paris: 18498774<br>
+        <br> <a href="https://www.noviosparis.cl/search-couple" target="_blank">¡Click aqui!</a>
+        <br>
+      </p>
+    </div>
+  </div>
+
+        </div>
+
+  <!-- Angelito auto -->
+   <div class="angel">
+    <p> Tenemos descuento por servicio de "angelito": llega en tu auto y un chofer te lleva de regreso
+<b>+56 9 6695 2124</b></p>
+   </div>
+
+      </section>
+
+      <!-- Google Maps -->
+      <section class="section map-section">
+        <div class="card">
+          <h3 class="map-instruction">¿No sabes cómo llegar? ¡Revisa el mapa!</h3>
+          
+          <p class="map-label">Iglesia Colegio Verbo Divino</p>
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3335.386293988445!2d-70.64713072410753!3d-33.28255557345639!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662b837ee70cda7%3A0x3d830692f8d1755a!2sAv.%20Chicureo%2012500%2C%20Chicureo%2C%20Colina%2C%20Regi%C3%B3n%20Metropolitana!5e0!3m2!1sen!2scl!4v1764803703368!5m2!1sen!2scl" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          
+          <p class="map-label">Casona de la Laguna Sofía Jottar</p>
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3335.757789287349!2d-70.62270991494884!3d-33.272832805029964!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662b78131bdb531%3A0xa3f385db4ebc8ddc!2sAv.%20Chicureo%2013000%2C%20Chicureo%2C%20Colina%2C%20Regi%C3%B3n%20Metropolitana!5e0!3m2!1sen!2scl!4v1764803820744!5m2!1sen!2scl" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </section>
+
+      <section class="section bottom-space"></section>
+
+    </main>
+
+  </div> <!-- cierre page-scale -->
+
+  
+
+  </div> <!-- cierre page -->
+  <script src="script.js"></script>
+</body>
+</html>
