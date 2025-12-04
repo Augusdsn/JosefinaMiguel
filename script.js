@@ -6,6 +6,57 @@ const muteBtn = document.getElementById("muteBtn");
 const backgroundMusic = document.getElementById("backgroundMusic");
 
 let isPlaying = false;
+let autoplayTries = 0;
+const AUTOPLAY_MAX_TRIES = 6;
+const AUTOPLAY_RETRY_MS = 700;
+
+// Helper to start background music (handles autoplay restrictions gracefully)
+function startMusic() {
+  if (!backgroundMusic) return;
+  backgroundMusic.volume = 0.7;
+  backgroundMusic.autoplay = true;
+  const playPromise = backgroundMusic.play();
+  if (playPromise !== undefined) {
+    playPromise
+      .then(() => {
+        isPlaying = true;
+        if (muteBtn) {
+          muteBtn.textContent = "🔊";
+          muteBtn.classList.remove("muted");
+        }
+      })
+      .catch((err) => {
+        console.log("Autoplay was prevented, will retry on user interaction:", err);
+      });
+  }
+}
+
+// Attempt immediately
+startMusic();
+
+// Try to start music on page load
+window.addEventListener("load", startMusic);
+
+// Retry a few times in case the first autoplay attempt is delayed
+const autoplayRetry = setInterval(() => {
+  if (isPlaying || autoplayTries >= AUTOPLAY_MAX_TRIES) {
+    clearInterval(autoplayRetry);
+    return;
+  }
+  autoplayTries += 1;
+  startMusic();
+}, AUTOPLAY_RETRY_MS);
+
+// Fallback: first user interaction starts music if blocked
+["click", "touchstart"].forEach((evt) => {
+  document.addEventListener(
+    evt,
+    () => {
+      startMusic();
+    },
+    { once: true }
+  );
+});
 
 if (openInviteBtn) {
 openInviteBtn.addEventListener("click", () => {
@@ -27,19 +78,7 @@ openInviteBtn.addEventListener("click", () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     
     // 3) Start playing music when entering hero-open
-    if (backgroundMusic && !isPlaying) {
-      backgroundMusic.volume = 0.7; // Set volume to 70%
-      const playPromise = backgroundMusic.play();
-      if (playPromise !== undefined) {
-        playPromise.then(() => {
-          console.log("Music started playing");
-          isPlaying = true;
-        }).catch(err => {
-          console.log("Autoplay was prevented:", err);
-          // Try playing on user interaction
-        });
-      }
-    }
+    startMusic();
   }, 1000);
 
   // 4) Activar animacion del pasaporte abierto (fade-in + saltito)
@@ -56,18 +95,33 @@ if (muteBtn) {
     if (backgroundMusic) {
       if (backgroundMusic.paused) {
         // Play the music
-        backgroundMusic.volume = 0.7; // Keep volume at 70%
-        backgroundMusic.play().catch(err => {
-          console.log("Play error:", err);
-        });
-        muteBtn.textContent = "🔊";
-        muteBtn.classList.remove("muted");
+        startMusic();
       } else {
         // Pause the music
         backgroundMusic.pause();
+        isPlaying = false;
         muteBtn.textContent = "🔇";
         muteBtn.classList.add("muted");
       }
+    }
+  });
+}
+
+// Keep button state in sync with actual playback
+if (backgroundMusic) {
+  backgroundMusic.addEventListener("pause", () => {
+    isPlaying = false;
+    if (muteBtn) {
+      muteBtn.textContent = "🔇";
+      muteBtn.classList.add("muted");
+    }
+  });
+
+  backgroundMusic.addEventListener("play", () => {
+    isPlaying = true;
+    if (muteBtn) {
+      muteBtn.textContent = "🔊";
+      muteBtn.classList.remove("muted");
     }
   });
 }
