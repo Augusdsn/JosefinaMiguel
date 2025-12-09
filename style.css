@@ -1356,3 +1356,11 @@ body::after {
     color: var(--text-main);
 }
 }
+.diseno {
+  font-size: 0.9rem;
+  color: var(--text-soft);
+  text-align: center;
+  margin: 30px 0 10px;
+  margin-top: 20px;
+  font-weight: 400;
+}
