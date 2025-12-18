@@ -1055,16 +1055,23 @@ body::after {
 }
 
 /* wrapper for each card; controls size and clipping */
-.flip-card {
+.flip-card-wrap {
   position: relative;
   width: 260px;
   height: 180px;
-  overflow: hidden;        /* hides anything that slides outside */
+  overflow: visible;
+}
+
+.flip-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;        /* keeps the slide effect clipped */
   cursor: pointer;
 }
 
 @media (min-width: 900px) {
-  .flip-card {
+  .flip-card-wrap {
     width: 340px;
     height: 240px;
   }
@@ -1175,7 +1182,7 @@ body::after {
 }
 
 @media (max-width: 760px) {
-  .flip-card {
+  .flip-card-wrap {
     width: 300px;
     height: 200px;
   }
@@ -1228,13 +1235,16 @@ body::after {
 
 /* CTA Button Section */
 .cta-section {
-  display: flex;
+  position: relative;
+  display: inline-flex;
   justify-content: center;
-  margin: 30px 0;
+  align-items: center;
+  margin: 30px auto;
 }
 
 .cta-button {
   display: inline-block;
+  position: relative;
   padding: 16px 60px;
   background-color: #d2a985;
   color: #ffffff;
@@ -1259,6 +1269,44 @@ body::after {
 .cta-button:active {
   transform: translateY(0);
   box-shadow: 0 2px 10px rgba(210, 169, 133, 0.3);
+}
+
+.mano {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  width: 15%;
+  height: auto;
+  transform: translate(45%, -55%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Mano overlay for flip-cards (Dresscode + Regalos) */
+.mano-two {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  width: 15%;
+  height: auto;
+  transform: translate(45%, -55%);
+  z-index: 6;
+  pointer-events: none;
+}
+
+@media (max-width: 760px) {
+  .mano-two {
+    width: 25%;
+    top: 55px;
+    transform: translate(40%, -50%);
+  }
+}
+
+/* If .mano contains an <img>, ensure it scales cleanly */
+.mano img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 @media (max-width: 760px) {
