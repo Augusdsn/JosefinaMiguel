@@ -6,6 +6,19 @@
   <title>Josefina y Miguel</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="preload" href="textura-de-papel-blanco.png" as="image">
+  <style>
+    /* Lottie down arrow */
+    .down-arrow-lottie {
+      width: 56px;
+      height: 56px;
+      margin: 18px auto 0;
+      opacity: 0.85;
+      pointer-events: none;
+      position: relative;
+      z-index: 10;
+      display: block;
+    }
+  </style>
 </head>
 <body class="show-layout">
 
@@ -37,6 +50,8 @@
           <p class="intro">
             Elegimos caminar juntos en esta vida, y nos encantaría que fueras parte de este viaje...
           </p>
+          <div id="downArrowLottie" class="down-arrow-lottie" aria-hidden="true"></div>
+
         </div>
       </section>
 
@@ -181,7 +196,7 @@
       <div class="title">¡Gracias!</div>
       <p class="description">
 Lista de novios Paris: 18498774<br>
-        <br> <a href=https://www.noviosparis.cl/home/couple-catalog/18498774" target="_blank">¡Click aqui!</a>
+        <br> <a href="https://www.noviosparis.cl/search-couple" target="_blank">¡Click aqui!</a>
         <br>
       </p>
     </div>
@@ -211,7 +226,8 @@ Lista de novios Paris: 18498774<br>
       </section>
 
       <section class="section bottom-space"></section>
-      <p class="diseno"> Diseño por <a href=https://www.instagram.com/augus.dsn/" target="_blank"> @augus.dsn </a> </p>
+      <p class="diseno"> Diseño por <a href="https://www.instagram.com/augus.dsn/" target="_blank"> @augus.dsn </a> </p>
+
     </main>
 
   </div> <!-- cierre page-scale -->
@@ -219,6 +235,39 @@ Lista de novios Paris: 18498774<br>
   
 
   </div> <!-- cierre page -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
   <script src="script.js"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const container = document.getElementById('downArrowLottie');
+      if (!container) {
+        console.warn('[Lottie] Container #downArrowLottie not found');
+        return;
+      }
+      if (!window.lottie) {
+        console.warn('[Lottie] lottie-web not loaded');
+        return;
+      }
+
+      const anim = window.lottie.loadAnimation({
+        container,
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: './down-arrow.json',
+        rendererSettings: {
+          preserveAspectRatio: 'xMidYMid meet'
+        }
+      });
+
+      anim.addEventListener('DOMLoaded', () => {
+        console.log('[Lottie] Animation loaded');
+      });
+
+      anim.addEventListener('data_failed', (e) => {
+        console.error('[Lottie] Failed to load ./down-arrow.json', e);
+      });
+    });
+  </script>
 </body>
 </html>

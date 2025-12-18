@@ -6,36 +6,107 @@ const muteBtn = document.getElementById("muteBtn");
 const backgroundMusic = document.getElementById("backgroundMusic");
 
 let isPlaying = false;
+let startedMuted = false;
 let autoplayTries = 0;
 const AUTOPLAY_MAX_TRIES = 6;
 const AUTOPLAY_RETRY_MS = 700;
 
 // Helper to start background music (handles autoplay restrictions gracefully)
-function startMusic() {
+function startMusic(forceUnmute = false) {
   if (!backgroundMusic) return;
-  backgroundMusic.volume = 0.7;
+
+  // iOS/Safari niceties
+  try {
+    backgroundMusic.setAttribute("playsinline", "");
+    backgroundMusic.playsInline = true;
+  } catch (e) {}
+
+  // If already playing, just handle unmute requests
+  if (!backgroundMusic.paused) {
+    if (forceUnmute) {
+      backgroundMusic.muted = false;
+      backgroundMusic.volume = 0.7;
+      startedMuted = false;
+      if (muteBtn) {
+        muteBtn.textContent = "🔊";
+        muteBtn.classList.remove("muted");
+      }
+    }
+    return;
+  }
+
+  // Goal: start immediately on load WITHOUT user interaction.
+  // The only reliable cross-browser way is to start muted.
   backgroundMusic.autoplay = true;
-  const playPromise = backgroundMusic.play();
-  if (playPromise !== undefined) {
-    playPromise
+  backgroundMusic.muted = true;
+  backgroundMusic.volume = 0.7;
+
+  const mutedPlay = backgroundMusic.play();
+  if (mutedPlay !== undefined) {
+    mutedPlay
       .then(() => {
         isPlaying = true;
+        startedMuted = true;
         if (muteBtn) {
-          muteBtn.textContent = "🔊";
-          muteBtn.classList.remove("muted");
+          muteBtn.textContent = "🔇";
+          muteBtn.classList.add("muted");
+        }
+
+        // If the caller explicitly asked to unmute (user gesture), do it now.
+        if (forceUnmute) {
+          backgroundMusic.muted = false;
+          backgroundMusic.volume = 0.7;
+          startedMuted = false;
+          if (muteBtn) {
+            muteBtn.textContent = "🔊";
+            muteBtn.classList.remove("muted");
+          }
+          return;
+        }
+
+        // Try to auto-unmute (will usually be blocked). If blocked, stay muted.
+        try {
+          backgroundMusic.muted = false;
+          const unmuteTry = backgroundMusic.play();
+          if (unmuteTry !== undefined) {
+            unmuteTry
+              .then(() => {
+                startedMuted = false;
+                if (muteBtn) {
+                  muteBtn.textContent = "🔊";
+                  muteBtn.classList.remove("muted");
+                }
+              })
+              .catch(() => {
+                backgroundMusic.muted = true;
+              });
+          }
+        } catch (e) {
+          backgroundMusic.muted = true;
         }
       })
       .catch((err) => {
-        console.log("Autoplay was prevented, will retry on user interaction:", err);
+        console.log("Muted autoplay was prevented:", err);
       });
   }
 }
 
-// Attempt immediately
-startMusic();
+// Init autoplay ASAP (muted)
+window.addEventListener("DOMContentLoaded", () => {
+  // small delay helps some mobile browsers
+  setTimeout(() => startMusic(false), 50);
+});
 
-// Try to start music on page load
-window.addEventListener("load", startMusic);
+// If the audio wasn't ready yet, try again as soon as it can play
+if (backgroundMusic) {
+  backgroundMusic.addEventListener(
+    "canplay",
+    () => {
+      if (!isPlaying) startMusic(false);
+    },
+    { once: true }
+  );
+}
 
 // Retry a few times in case the first autoplay attempt is delayed
 const autoplayRetry = setInterval(() => {
@@ -44,7 +115,7 @@ const autoplayRetry = setInterval(() => {
     return;
   }
   autoplayTries += 1;
-  startMusic();
+  startMusic(false);
 }, AUTOPLAY_RETRY_MS);
 
 // Fallback: first user interaction starts music if blocked
@@ -52,7 +123,7 @@ const autoplayRetry = setInterval(() => {
   document.addEventListener(
     evt,
     () => {
-      startMusic();
+      startMusic(true);
     },
     { once: true }
   );
@@ -78,7 +149,7 @@ openInviteBtn.addEventListener("click", () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     
     // 3) Start playing music when entering hero-open
-    startMusic();
+    startMusic(true);
   }, 1000);
 
   // 4) Activar animacion del pasaporte abierto (fade-in + saltito)
@@ -92,17 +163,26 @@ openInviteBtn.addEventListener("click", () => {
 /* Music mute button */
 if (muteBtn) {
   muteBtn.addEventListener("click", () => {
-    if (backgroundMusic) {
-      if (backgroundMusic.paused) {
-        // Play the music
-        startMusic();
-      } else {
-        // Pause the music
-        backgroundMusic.pause();
-        isPlaying = false;
-        muteBtn.textContent = "🔇";
-        muteBtn.classList.add("muted");
-      }
+    if (!backgroundMusic) return;
+
+    // If not playing yet, this user gesture can start + unmute
+    if (backgroundMusic.paused) {
+      startMusic(true);
+      return;
+    }
+
+    // Toggle mute state WITHOUT pausing
+    if (backgroundMusic.muted) {
+      backgroundMusic.muted = false;
+      backgroundMusic.volume = 0.7;
+      startedMuted = false;
+      muteBtn.textContent = "🔊";
+      muteBtn.classList.remove("muted");
+    } else {
+      backgroundMusic.muted = true;
+      startedMuted = true;
+      muteBtn.textContent = "🔇";
+      muteBtn.classList.add("muted");
     }
   });
 }
@@ -111,6 +191,7 @@ if (muteBtn) {
 if (backgroundMusic) {
   backgroundMusic.addEventListener("pause", () => {
     isPlaying = false;
+    // When paused, show muted icon (no audio)
     if (muteBtn) {
       muteBtn.textContent = "🔇";
       muteBtn.classList.add("muted");
