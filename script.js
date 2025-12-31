@@ -212,26 +212,40 @@ if (backgroundMusic) {
 // Fecha exacta del evento
 const targetDate = new Date("2026-03-20T17:00:00");
 
-function monthDiff(a, b) {
-  let months = (b.getFullYear() - a.getFullYear()) * 12;
-  months += b.getMonth() - a.getMonth();
-  return Math.max(0, months);
+function diffInMonthsDaysHours(start, end) {
+  let months =
+    (end.getFullYear() - start.getFullYear()) * 12 +
+    (end.getMonth() - start.getMonth());
+
+  // Fecha temporal sumando meses
+  let temp = new Date(start);
+  temp.setMonth(temp.getMonth() + months);
+
+  // Si nos pasamos, retrocedemos un mes
+  if (temp > end) {
+    months--;
+    temp.setMonth(temp.getMonth() - 1);
+  }
+
+  const diffMs = end - temp;
+
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const hours = Math.floor(diffMs / (1000 * 60 * 60)) % 24;
+
+  return { months, days, hours };
 }
 
 function updateCountdown() {
   const now = new Date();
-  const diff = targetDate - now;
 
-  if (diff <= 0) {
+  if (now >= targetDate) {
     updateDigits("months-container", 0);
     updateDigits("days-container", 0);
     updateDigits("hours-container", 0);
     return;
   }
 
-  const months = monthDiff(now, targetDate);
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24)) % 30;
-  const hours = Math.floor(diff / (1000 * 60 * 60)) % 24;
+  const { months, days, hours } = diffInMonthsDaysHours(now, targetDate);
 
   updateDigits("months-container", months);
   updateDigits("days-container", days);
@@ -242,6 +256,7 @@ function updateDigits(containerId, value) {
   const digits = value.toString().padStart(2, "0").split("");
   const container = document.getElementById(containerId);
   container.innerHTML = "";
+
   digits.forEach((d) => {
     const el = document.createElement("div");
     el.className = "digit";
@@ -255,4 +270,4 @@ function updateDigits(containerId, value) {
 }
 
 updateCountdown();
-setInterval(updateCountdown, 60 * 1000); // Se actualiza cada minuto
+setInterval(updateCountdown, 60 * 1000); // actualiza cada minuto
